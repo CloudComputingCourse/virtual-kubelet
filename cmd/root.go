@@ -91,6 +91,9 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if os.Getenv("NODE_NAME") != "" {
+		nodeName = os.Getenv("NODE_NAME")
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
