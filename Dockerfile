@@ -22,7 +22,7 @@ RUN set -x \
 	&& rm -rf /go \
 	&& echo "Build complete."
 
-FROM scratch
+FROM ubuntu:14.04
 
 COPY --from=builder /usr/bin/virtual-kubelet /usr/bin/virtual-kubelet
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs
