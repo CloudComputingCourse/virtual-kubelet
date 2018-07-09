@@ -59,7 +59,6 @@ func NewMockProvider(providerConfig, nodeName, operatingSystem string, internalI
 }
 
 // loadConfig loads the given json configuration files.
-
 func loadConfig(providerConfig, nodeName string) (config MockConfig, err error) {
 	data, err := ioutil.ReadFile(providerConfig)
 	if err != nil {
