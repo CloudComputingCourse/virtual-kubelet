@@ -132,7 +132,7 @@ func New(nodeName, operatingSystem, namespace, kubeConfig, provider, providerCon
 	go func() {
 		for range tick {
 			s.updateNode()
-			s.updatePodStatuses()
+			// s.updatePodStatuses()
 		}
 	}()
 
@@ -147,16 +147,24 @@ func (s *Server) registerNode() error {
 		taints = append(taints, s.taint)
 	}
 
+	labels := map[string]string{
+		"type":                                                    "virtual-kubelet",
+		"kubernetes.io/role":                                      "agent",
+		"beta.kubernetes.io/os":                                   strings.ToLower(s.provider.OperatingSystem()),
+		"kubernetes.io/hostname":                                  s.nodeName,
+		"alpha.service-controller.kubernetes.io/exclude-balancer": "true",
+	}
+	// add provider specific labels
+	if s.provider.Labels() != nil {
+		for k, v := range s.provider.Labels() {
+			labels[k] = v
+		}
+	}
+
 	node := &corev1.Node{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: s.nodeName,
-			Labels: map[string]string{
-				"type":                                                    "virtual-kubelet",
-				"kubernetes.io/role":                                      "agent",
-				"beta.kubernetes.io/os":                                   strings.ToLower(s.provider.OperatingSystem()),
-				"kubernetes.io/hostname":                                  s.nodeName,
-				"alpha.service-controller.kubernetes.io/exclude-balancer": "true",
-			},
+			Name:   s.nodeName,
+			Labels: labels,
 		},
 		Spec: corev1.NodeSpec{
 			Taints: taints,

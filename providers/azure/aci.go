@@ -1134,3 +1134,8 @@ func getACIEnvVar(e v1.EnvVar) aci.EnvironmentVariable {
 	}
 	return envVar
 }
+
+// Labels returns provider specific labels
+func (p *ACIProvider) Labels() map[string]string {
+	return nil
+}

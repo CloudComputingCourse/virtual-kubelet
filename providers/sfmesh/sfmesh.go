@@ -849,3 +849,9 @@ func (p *SFMeshProvider) NodeDaemonEndpoints() *v1.NodeDaemonEndpoints {
 func (p *SFMeshProvider) OperatingSystem() string {
 	return providers.OperatingSystemLinux
 }
+
+// Labels returns provider specific labels
+func (p *SFMeshProvider) Labels() map[string]string {
+	return nil
+}
+

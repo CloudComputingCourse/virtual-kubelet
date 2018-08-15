@@ -292,3 +292,8 @@ func (p *BrokerProvider) doRequest(method string, urlPath *url.URL, body []byte,
 
 	return nil, nil
 }
+
+// Labels returns provider specific labels
+func (p *BrokerProvider) Labels() map[string]string {
+	return nil
+}
