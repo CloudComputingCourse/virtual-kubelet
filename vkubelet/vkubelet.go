@@ -59,6 +59,21 @@ func New(cfg Config) *Server {
 	}
 }
 
+// Run creates and starts an instance of the pod controller, blocking until it stops.
+//
+// Note that this does not setup the HTTP routes that are used to expose pod
+// info to the Kubernetes API Server, such as logs, metrics, exec, etc.
+// See `AttachPodRoutes` and `AttachMetricsRoutes` to set these up.
+func (s *Server) Run(ctx context.Context) error {
+	if err := s.registerNode(ctx); err != nil {
+		return err
+	}
+
+	go s.providerSyncLoop(ctx)
+
+	return NewPodController(s).Run(ctx, s.podSyncWorkers)
+}
+
 // providerSyncLoop syncronizes pod states from the provider back to kubernetes
 func (s *Server) providerSyncLoop(ctx context.Context) {
 	const sleepTime = 5 * time.Second

@@ -290,3 +290,7 @@ func (p *Provider) NodeDaemonEndpoints(ctx context.Context) *v1.NodeDaemonEndpoi
 func (p *Provider) OperatingSystem() string {
 	return providers.OperatingSystemLinux
 }
+
+func (p *Provider) Labels() map[string]string {
+	return nil
+}

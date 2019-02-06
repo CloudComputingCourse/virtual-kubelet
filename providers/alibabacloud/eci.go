@@ -893,3 +893,8 @@ func getECITagValue(cg *eci.ContainerGroup, key string) string {
 	}
 	return ""
 }
+
+// Labels returns provider specific labels
+func (p *ECIProvider) Labels() map[string]string {
+	return nil
+}
