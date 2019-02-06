@@ -1,30 +1,35 @@
 package azure
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
+
+	"github.com/virtual-kubelet/virtual-kubelet/log"
 )
 
 // AcsCredential represents the credential file for ACS
 type AcsCredential struct {
-	Cloud          string `json:"cloud"`
-	TenantID       string `json:"tenantId"`
-	SubscriptionID string `json:"subscriptionId"`
-	ClientID       string `json:"aadClientId"`
-	ClientSecret   string `json:"aadClientSecret"`
-	ResourceGroup  string `json:"resourceGroup"`
-	Region         string `json:"location"`
+	Cloud             string `json:"cloud"`
+	TenantID          string `json:"tenantId"`
+	SubscriptionID    string `json:"subscriptionId"`
+	ClientID          string `json:"aadClientId"`
+	ClientSecret      string `json:"aadClientSecret"`
+	ResourceGroup     string `json:"resourceGroup"`
+	Region            string `json:"location"`
+	VNetName          string `json:"vnetName"`
+	VNetResourceGroup string `json:"vnetResourceGroup"`
 }
 
 // NewAcsCredential returns an AcsCredential struct from file path
-func NewAcsCredential(filepath string) (*AcsCredential, error) {
-	log.Printf("Reading ACS credential file %q", filepath)
+func NewAcsCredential(p string) (*AcsCredential, error) {
+	logger := log.G(context.TODO()).WithField("method", "NewAcsCredential").WithField("file", p)
+	log.Trace(logger, "Reading ACS credential file")
 
-	b, err := ioutil.ReadFile(filepath)
+	b, err := ioutil.ReadFile(p)
 	if err != nil {
-		return nil, fmt.Errorf("Reading ACS credential file %q failed: %v", filepath, err)
+		return nil, fmt.Errorf("Reading ACS credential file %q failed: %v", p, err)
 	}
 
 	// Unmarshal the authentication file.
@@ -33,6 +38,6 @@ func NewAcsCredential(filepath string) (*AcsCredential, error) {
 		return nil, err
 	}
 
-	log.Printf("Load ACS credential file %q successfully", filepath)
+	log.Trace(logger, "Load ACS credential file successfully")
 	return &cred, nil
 }
